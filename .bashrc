@@ -116,7 +116,6 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# Hank added below -------------------------------------------------------------------------------
 echo "Hank's server (version -> 20240323)"
 echo "kernel version (" $(uname -r) ")"
 echo ""
@@ -236,6 +235,10 @@ function MiTac_repo_help(){
 		echo ""
 		echo "gemini_c26 AOS10 ->"
 		echo "repo init -u http://10.88.25.195/aiotbc/git/bsp/sc600_10/manifest.git -m mitac-sc600_10_c26-20220905-gemini-dev.xml -b master"
+		echo ""
+		echo "phaeton"
+		echo "repo init -u http://10.88.26.86:18080/aiotbc/git/bsp/qcm4290/manifest.git -b master -m mitac-sc680a-android13-r03-r004.xml
+"
 	elif [[ $MiTac_choose -eq 2 ]] ; then
 		rslg
 	elif [[ $MiTac_choose -eq 3 ]] ; then
@@ -274,3 +277,14 @@ source /home/hank/init/repo_manager.sh
 
 export LC_ALL=C
 export LC_CTYPE=C.UTF-8
+
+function red_dot_sensitivity () {
+	# when we use cmd "xinput --list-props "TPPS/2 Elan TrackPoint" | grep "libinput Accel Speed""
+	# we would get these output
+	#    libinput Accel Speed (314):	-0.150000    <-----   which we wanna tune can make difference sensitivity(thinkpad red dot)
+	#    libinput Accel Speed Default (315):	0.000000
+	xinput --list-props "TPPS/2 Elan TrackPoint" | grep "libinput Accel Speed ("
+	echo cmd: xinput --set-prop "TPPS/2 Elan TrackPoint" "libinput Accel Speed" $1
+	xinput --set-prop "TPPS/2 Elan TrackPoint" "libinput Accel Speed" $1
+	xinput --list-props "TPPS/2 Elan TrackPoint" | grep "libinput Accel Speed ("
+}
